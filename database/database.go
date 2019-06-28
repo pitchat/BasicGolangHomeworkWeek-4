@@ -1,31 +1,31 @@
 package database
 
-
 import (
+	// pq is Postgres database driver
 	"database/sql"
+	_ "github.com/lib/pq"
 	"log"
 	"os"
-	_"github.com/lib/pq"
 )
 
-//dbURL for global database connection string 
+//dbURL for global database connection string
 var dbURL string
 
 //InitDB initial database table todo
-func InitDB(){
+func InitDB() {
 	dbURL = os.Getenv("DATABASE_URL")
-	if len(dbURL) == 0{
+	if len(dbURL) == 0 {
 		log.Fatal("Environment variable DATABASE_URL is empty")
 	}
-	db, err := sql.Open("postgres",dbURL)
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatal("Can't connect db",err.Error())
+		log.Fatal("Can't connect db", err.Error())
 	}
 	defer db.Close()
 
 	_, err = db.Exec("DROP TABLE todos")
 	if err != nil {
-		log.Fatal("Can't drop table fatal error",err.Error())
+		log.Fatal("Can't drop table fatal error", err.Error())
 	}
 
 	createTb := `
@@ -34,17 +34,17 @@ func InitDB(){
 			title TEXT,
 			status TEXT
 	);
-	`;
+	`
 
 	_, err = db.Exec(createTb)
 	if err != nil {
-		log.Fatal("Can't create table fatal error",err.Error())
+		log.Fatal("Can't create table fatal error", err.Error())
 	}
-	
+
 }
 
 // Connect open connection to database
-func Connect()(*sql.DB, error){
-	db, err := sql.Open("postgres",dbURL)
-	return db,err
+func Connect() (*sql.DB, error) {
+	db, err := sql.Open("postgres", dbURL)
+	return db, err
 }

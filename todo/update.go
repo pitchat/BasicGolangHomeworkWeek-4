@@ -1,16 +1,16 @@
 package todo
 
 import (
-	"strconv"
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"database/sql"
+	"github.com/gin-gonic/gin"
 	"github.com/pitchat/test4/database"
+	"net/http"
+	"strconv"
 )
 
 //Update todo
-func (todo Todo)Update(conn *sql.DB) error{
-	
+func (todo Todo) Update(conn *sql.DB) error {
+
 	stmt, err := conn.Prepare("UPDATE todos SET title=$2, status=$3 WHERE id=$1;")
 	if err != nil {
 		return err
@@ -23,22 +23,23 @@ func (todo Todo)Update(conn *sql.DB) error{
 
 //UpdateHandler gin api
 func UpdateHandler(c *gin.Context) {
+
 	t := Todo{}
 	if err := c.ShouldBindJSON(&t); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	t.ID = id
 
 	err = database.Update(t)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

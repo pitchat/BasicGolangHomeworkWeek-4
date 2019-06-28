@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/pitchat/test4/todo"
-	"github.com/pitchat/test4/database"
 	"github.com/gin-gonic/gin"
+	"github.com/pitchat/test4/database"
+	"github.com/pitchat/test4/todo"
 )
 
-func main(){
-	
+func main() {
+
 	database.InitDB()
 
 	router := gin.Default()

@@ -6,15 +6,15 @@ import (
 
 // DataLayer is interface
 type DataLayer interface {
-	Insert(conn *sql.DB) (DataLayer,error)
+	Insert(conn *sql.DB) (DataLayer, error)
 	Update(conn *sql.DB) error
 	Delete(conn *sql.DB) error
-	GetByKey(conn *sql.DB) (DataLayer,error)
-	GetAll(conn *sql.DB) ([]DataLayer,error)
+	GetByKey(conn *sql.DB) (DataLayer, error)
+	GetAll(conn *sql.DB) ([]DataLayer, error)
 }
 
-// GetByKey database record by key
-func GetByKey(d DataLayer) (DataLayer,error){
+// GetByKey table record by key
+func GetByKey(d DataLayer) (DataLayer, error) {
 	conn, err := Connect()
 	if err != nil {
 		return nil, err
@@ -24,8 +24,8 @@ func GetByKey(d DataLayer) (DataLayer,error){
 	return o, err
 }
 
-// GetAll database records
-func GetAll(d DataLayer) ([]DataLayer,error){
+// GetAll table records
+func GetAll(d DataLayer) ([]DataLayer, error) {
 	conn, err := Connect()
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func GetAll(d DataLayer) ([]DataLayer,error){
 }
 
 // Insert database
-func Insert(d DataLayer) (DataLayer,error){
+func Insert(d DataLayer) (DataLayer, error) {
 	conn, err := Connect()
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func Insert(d DataLayer) (DataLayer,error){
 }
 
 // Update database
-func Update(d DataLayer) error{
+func Update(d DataLayer) error {
 	conn, err := Connect()
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func Update(d DataLayer) error{
 }
 
 // Delete database
-func Delete(d DataLayer) error{
+func Delete(d DataLayer) error {
 	conn, err := Connect()
 	if err != nil {
 		return err
@@ -69,6 +69,6 @@ func Delete(d DataLayer) error{
 }
 
 //IConv is convert struct to interface
-func IConv(d DataLayer) DataLayer{
+func IConv(d DataLayer) DataLayer {
 	return d
 }

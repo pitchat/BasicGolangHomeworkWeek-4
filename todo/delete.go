@@ -1,40 +1,38 @@
 package todo
 
 import (
-	"strconv"
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"database/sql"
+	"github.com/gin-gonic/gin"
 	"github.com/pitchat/test4/database"
+	"net/http"
+	"strconv"
 )
 
 //Delete todo
-func (todo Todo)Delete(conn *sql.DB) error{
-	
+func (todo Todo) Delete(conn *sql.DB) error {
+
 	stmt, err := conn.Prepare("DELETE FROM todos WHERE id=$1;")
 	if err != nil {
 		return err
 	}
-
 	_, err = stmt.Exec(todo.ID)
-
 	return err
 }
 
 //DeleteByIDHandler gin api
 func DeleteByIDHandler(c *gin.Context) {
-	t := Todo{}
 
+	t := Todo{}
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error":err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	t.ID = id
 
 	err = database.Delete(t)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
