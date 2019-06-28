@@ -9,9 +9,9 @@ import (
 )
 
 //GetAll get all todos
-func (todo Todo)GetAll(conn *sql.DB) ([]Todo,error){
+func (todo Todo)GetAll(conn *sql.DB) ([]database.DataLayer,error){
 	
-	tt := []Todo{}
+	tt := []database.DataLayer{}
 	
 	query := "SELECT id, title, status FROM todos"
 	rows, err := conn.Query(query)
@@ -24,7 +24,7 @@ func (todo Todo)GetAll(conn *sql.DB) ([]Todo,error){
 		if err := rows.Scan(&t.ID, &t.Title, &t.Status); err != nil {
 			return nil, err
 		}
-		tt = append(tt,t)
+		tt = append(tt,database.IConv(t))
 	}
 
 	return tt, err
@@ -50,15 +50,15 @@ func GetHandler(c *gin.Context) {
 
 }
 
-//GetByID get todo by id
-func (todo Todo)GetByID(conn *sql.DB) (Todo,error){
+//GetByKey get todo by key
+func (todo Todo)GetByKey(conn *sql.DB) (database.DataLayer,error){
 
 	row := conn.QueryRow("SELECT id, title, status FROM todos where id = $1", todo.ID)
 	err := row.Scan(&todo.ID, &todo.Title, &todo.Status)
 	if err != nil {
 		return todo, err
 	}
-	return todo, err
+	return database.IConv(todo), err
 
 }
 
@@ -72,18 +72,10 @@ func GetByIDHandler(c *gin.Context) {
 	}
 	t.ID = id
 
-	conn, err := database.Connect()
+	t2, err := database.GetByKey(t)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
 		return
-	}
-	defer conn.Close()
-	
-	t, err = t.GetByID(conn)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
-		return
-	}
-	
-	c.JSON(http.StatusOK, t)
+	}	
+	c.JSON(http.StatusOK, t2)
 }

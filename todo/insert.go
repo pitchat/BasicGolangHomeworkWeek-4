@@ -8,7 +8,7 @@ import (
 )
 
 //Insert todo
-func (todo Todo)Insert(conn *sql.DB) (Todo,error){
+func (todo Todo)Insert(conn *sql.DB) (database.DataLayer,error){
 	
 	query := `
 	INSERT INTO todos (title, status) 
@@ -17,8 +17,7 @@ func (todo Todo)Insert(conn *sql.DB) (Todo,error){
 
 	row := conn.QueryRow(query,todo.Title,todo.Status)
 	err := row.Scan(&todo.ID)
-
-	return todo, err
+	return database.IConv(todo), err
 }
 
 //CreateHandler gin api
@@ -29,18 +28,12 @@ func CreateHandler(c *gin.Context) {
 		return
 	}
 
-	conn, err := database.Connect()
+	t2, err := database.Insert(t)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
 		return
 	}
-	defer conn.Close()
 
-	t, err = t.Insert(conn)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
-		return
-	}
-	c.JSON(http.StatusCreated, t)
+	c.JSON(http.StatusCreated, t2)
 
 }

@@ -36,14 +36,7 @@ func UpdateHandler(c *gin.Context) {
 	}
 	t.ID = id
 
-	conn, err := database.Connect()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
-		return
-	}
-	defer conn.Close()
-
-	err = t.Update(conn)
+	err = database.Update(t)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
 		return
