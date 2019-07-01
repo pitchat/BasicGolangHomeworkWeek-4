@@ -3,7 +3,7 @@ package todo
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/pitchat/test4/database"
+	"github.com/pitchat/BasicGolangHomeworkWeek-4/database"
 	"net/http"
 	"strconv"
 )
@@ -15,9 +15,7 @@ func (todo Todo) Update(conn *sql.DB) error {
 	if err != nil {
 		return err
 	}
-
 	_, err = stmt.Exec(todo.ID, todo.Title, todo.Status)
-
 	return err
 }
 

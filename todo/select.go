@@ -3,7 +3,7 @@ package todo
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/pitchat/test4/database"
+	"github.com/pitchat/BasicGolangHomeworkWeek-4/database"
 	"net/http"
 	"strconv"
 )
